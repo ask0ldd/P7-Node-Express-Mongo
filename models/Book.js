@@ -3,11 +3,15 @@ const mongoose = require('mongoose')
 const bookSchema = mongoose.Schema({
     // _id automatiquement genere par mongo
     title: { type : String, required : true},
-    description: { type : String, required : true},
+    author: { type : String, required : true},
     imageUrl: { type : String, required : true},
-    userId: { type : String, required : true},
-    price: { type : Number, required : true},
-
+    year: { type : Number, required : true},
+    genre: { type : String, required : true},
+    ratings:    {
+                    userID: {type : String},
+                    grade: {type :Number}
+                },
+    averageRating: { type : Number}
 })
 
 module.exports = mongoose.model('Book', bookSchema)
