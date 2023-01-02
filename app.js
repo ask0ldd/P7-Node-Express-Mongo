@@ -32,6 +32,6 @@ app.use((req, res, next) => { // header to deal with CORS
 app.use(bodyParser.json())
 
 app.use('/api/book', bookRoutes)
-app.use('/api/user', userRoutes)
+app.use('/api/auth', userRoutes)
 
 module.exports = app // permet d'acceder a l'application depuis nos autres fichiers, notamment serveur node
