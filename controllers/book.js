@@ -57,7 +57,10 @@ exports.postRating = (req, res, next) => {
     Book.updateOne(
         { _id: bookid },
         { $push: {ratings : { userId : userid, grade : grade }} })
-        .then(books => res.status(201).json("okdoki"))
+        .then(books => {
+            res.status(201).json("rating posted.")
+            res.locals.id = bookid // value to pass to the next middleware
+            next()})
         .catch(error => res.status(404).json({ error }))
 }
 
@@ -66,7 +69,7 @@ exports.postRating = (req, res, next) => {
         const {bookid, userid, grade}= req.body // recuperer userid via token?
         console.log(req.body)
         Book.updateOne(
-            { _id: bookid, 'ratings.userId' : userid}, // search for
+            { _id: bookid, 'ratings.userId' : userid}, // select
             { $set :{ "ratings.$.grade" : grade }} // $ = first result
             )
             .then(books => res.status(201).json("updated rating"))
