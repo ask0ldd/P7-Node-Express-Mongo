@@ -7,6 +7,10 @@ const booksCtrl = require ('../controllers/book')
 
 // middleware // '/' added to the uri already specified in app.js : app.use('/api/books', bookRoutes)
 router.post('/', booksCtrl.postBook) // pas execute function mais passe fonction dc pas de ()
+router.get('/bestrating', booksCtrl.getTop) // bestrating avant /:id pr que bestrating ne puisse pas etre traite comme un id
+router.post('/:id/rating', booksCtrl.postRating)
+router.put('/:id/rating', booksCtrl.updateRating)
 router.get('/:id', booksCtrl.getBook)
+
 
 module.exports = router

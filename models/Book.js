@@ -7,10 +7,11 @@ const bookSchema = mongoose.Schema({
     imageUrl: { type : String, required : true},
     year: { type : Number, required : true},
     genre: { type : String, required : true},
-    ratings:    {
-                    userID: {type : String},
-                    grade: {type :Number}
-                },
+    ratings:    [{
+                    _id : false,
+                    userId: {type : String},
+                    grade: {type : Number}
+                }],
     averageRating: { type : Number }
 })
 

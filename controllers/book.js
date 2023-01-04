@@ -30,6 +30,7 @@ const Book = require('../models/Book')
     res.status(200).json(books)
 }*/
 
+// verifier que le book n'existe pas deja
 exports.postBook = (req, res, next) => { 
     const book = new Book({...req.body})
     book.save()
@@ -42,3 +43,52 @@ exports.getBook = (req, res, next) => {
     .then(book => res.status(200).json(book))
     .catch(error => res.status(404).json({ error }))
 }
+
+exports.getTop = (req, res, next) => {
+    console.log("gettop")
+    Book.find().limit(3).sort({averageRating:-1})
+    .then(books => res.status(200).json(books))
+    .catch(error => res.status(404).json({ error }))
+}
+
+exports.postRating = (req, res, next) => {
+    const {bookid, userid, grade}= req.body // recuperer userid via token?
+    console.log(req.body)
+    Book.updateOne(
+        { _id: bookid },
+        { $push: {ratings : { userId : userid, grade : grade }} })
+        .then(books => res.status(201).json("okdoki"))
+        .catch(error => res.status(404).json({ error }))
+}
+
+{
+    exports.updateRating = (req, res, next) => {
+        const {bookid, userid, grade}= req.body // recuperer userid via token?
+        console.log(req.body)
+        Book.updateOne(
+            { _id: bookid, 'ratings.userId' : userid}, // search for
+            { $set :{ "ratings.$.grade" : grade }} // $ = first result
+            )
+            .then(books => res.status(201).json("updated rating"))
+            .catch(error => res.status(404).json({ error }))
+    }
+}
+
+
+/*exports.postRating = (req, res, next) => {
+    console.log("postrating")
+    console.log({...req.body})
+    const {bookid, userid, grade}= req.body // recuperer userid via token?
+    console.log(bookid)
+    Book.updateOne(
+        { _id: bookid },
+        { author : "joe abercrombie"})
+        .then(books => res.status(201).json("okdoki"))
+        .catch(error => res.status(404).json({ error }))
+}*/
+
+// bestrating 3 books avec la meilleure note
+
+// 4.5 => 45
+
+//utilisateur ne doit pas pouvoir noter un livre plusieurs fois
