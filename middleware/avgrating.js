@@ -1,7 +1,7 @@
 const Book = require('../models/Book')
 const mongoose = require('mongoose');
 
-module.exports = (req, res, next) => {
+/*module.exports = (req, res, next) => {
     try {
         //next()
 
@@ -11,29 +11,32 @@ module.exports = (req, res, next) => {
             { $unwind : "$ratings" }, // create one full document per element in the array 
             { "$group" : {
                 "_id" : null, // mandatory
-                "avg" : { "$avg" : "$ratings.grade" }}}
-        ]).then(result => console.log(result[0].avg)).catch(error => console.log(error))
-        
+                "avg" : { "$avg" : "$ratings.grade" }}}])
+            .then(result => {
+                console.log(result[0].avg)
+                res.locals.avg = result[0].avg
+                next()})
+            .catch(error => console.log(error))     
+    } catch(error) {
+        //res.status(401).json({ error })
+        console.log(error)
+    }
+ }*/
+
+ module.exports = (req, res, next) => {
+    try {
+        Book.aggregate([{ $match: { _id: mongoose.Types.ObjectId(res.locals.id) } }])
+        .unwind("$ratings")
+        .group({
+            "_id" : null, // mandatory
+            "avg" : { "$avg" : "$ratings.grade" }})
+        .then(result => {
+            console.log(result[0].avg)
+            res.locals.avg = result[0].avg
+            next()})
+        .catch(error => console.log(error))     
     } catch(error) {
         //res.status(401).json({ error })
         console.log(error)
     }
  }
-
- /*
-db.clothing.insertMany([
-  { "_id" : 1, "item" : "Shirt", "sizes": [ "S", "M", "L"] },
-  { "_id" : 2, "item" : "Shorts", "sizes" : [ ] },
-  { "_id" : 3, "item" : "Hat", "sizes": "M" },
-  { "_id" : 4, "item" : "Gloves" },
-  { "_id" : 5, "item" : "Scarf", "sizes" : null }
-])
-
-db.clothing.aggregate( [ { $unwind: { path: "$sizes" } } ] )
-
-returns
-
-{ _id: 1, item: 'Shirt', sizes: 'S' },
-{ _id: 1, item: 'Shirt', sizes: 'M' },
-{ _id: 1, item: 'Shirt', sizes: 'L' },
-{ _id: 3, item: 'Hat', sizes: 'M' }*/

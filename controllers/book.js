@@ -51,7 +51,7 @@ exports.getTop = (req, res, next) => {
     .catch(error => res.status(404).json({ error }))
 }
 
-exports.postRating = (req, res, next) => {
+exports.postRating = (req, res, next) => { // verifier que l'utilisateur n'a pas deja poste une note
     const {bookid, userid, grade}= req.body // recuperer userid via token?
     console.log(req.body)
     Book.updateOne(
@@ -64,17 +64,25 @@ exports.postRating = (req, res, next) => {
         .catch(error => res.status(404).json({ error }))
 }
 
-{
-    exports.updateRating = (req, res, next) => {
-        const {bookid, userid, grade}= req.body // recuperer userid via token?
-        console.log(req.body)
-        Book.updateOne(
-            { _id: bookid, 'ratings.userId' : userid}, // select
-            { $set :{ "ratings.$.grade" : grade }} // $ = first result
-            )
-            .then(books => res.status(201).json("updated rating"))
-            .catch(error => res.status(404).json({ error }))
-    }
+/*exports.updateRating = (req, res, next) => {
+    const {bookid, userid, grade}= req.body // recuperer userid via token?
+    Book.updateOne(
+        { _id: bookid, 'ratings.userId' : userid}, // select
+        { $set :{ "ratings.$.grade" : grade }} // $ = first result
+        )
+        .then(books => res.status(201).json("updated rating"))
+        .catch(error => res.status(404).json({ error }))
+}*/
+
+
+exports.updateAvgRating = (req, res, next) => {
+    console.log(res.locals.id)
+    Book.updateOne(
+        { _id: res.locals.id}, // select
+        { $set :{ "averageRating" : res.locals.avg }} // $ = first result
+        )
+        .then(books => console.log("updated avg rating"))
+        .catch(error => console.log({ error }))
 }
 
 
