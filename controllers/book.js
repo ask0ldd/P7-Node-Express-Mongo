@@ -32,10 +32,10 @@ const Book = require('../models/Book')
 
 // verifier que le book n'existe pas deja
 exports.postBook = (req, res, next) => { 
-    const book = new Book({...req.body})
+    const book = new Book({...req.body}) // replacer user id par celui du token
     book.save()
-          .then(() => res.status(201).json({ message: 'Book enregistré !'}))
-          .catch(error => res.status(400).json({ error }))
+        .then(() => res.status(201).json({ message: 'Book enregistré !'}))
+        .catch(error => res.status(400).json({ error }))
 }
 
 exports.getBook = (req, res, next) => { 
@@ -45,11 +45,15 @@ exports.getBook = (req, res, next) => {
 }
 
 exports.getTop = (req, res, next) => {
-    console.log("gettop")
     Book.find().limit(3).sort({averageRating:-1})
     .then(books => res.status(200).json(books))
     .catch(error => res.status(404).json({ error }))
 }
+
+/*
+person.friends.push(friend);
+person.save(done);
+*/
 
 exports.postRating = (req, res, next) => { // verifier que l'utilisateur n'a pas deja poste une note
     const {bookid, userid, grade}= req.body // recuperer userid via token?
@@ -63,17 +67,6 @@ exports.postRating = (req, res, next) => { // verifier que l'utilisateur n'a pas
             next()})
         .catch(error => res.status(404).json({ error }))
 }
-
-/*exports.updateRating = (req, res, next) => {
-    const {bookid, userid, grade}= req.body // recuperer userid via token?
-    Book.updateOne(
-        { _id: bookid, 'ratings.userId' : userid}, // select
-        { $set :{ "ratings.$.grade" : grade }} // $ = first result
-        )
-        .then(books => res.status(201).json("updated rating"))
-        .catch(error => res.status(404).json({ error }))
-}*/
-
 
 exports.updateAvgRating = (req, res, next) => {
     console.log(res.locals.id)
@@ -103,3 +96,14 @@ exports.updateAvgRating = (req, res, next) => {
 // 4.5 => 45
 
 //utilisateur ne doit pas pouvoir noter un livre plusieurs fois
+
+
+/*exports.updateRating = (req, res, next) => {
+    const {bookid, userid, grade}= req.body // recuperer userid via token?
+    Book.updateOne(
+        { _id: bookid, 'ratings.userId' : userid}, // select
+        { $set :{ "ratings.$.grade" : grade }} // $ = first result
+        )
+        .then(books => res.status(201).json("updated rating"))
+        .catch(error => res.status(404).json({ error }))
+}*/

@@ -1,7 +1,7 @@
 const express = require ("express")
 const router = express.Router()
 
-const avgrating = require('../middleware/avgrating');
+const avgrating = require('../middleware/avgRating');
 
 const booksCtrl = require ('../controllers/book')
 
