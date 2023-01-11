@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => { // ?!!! verification pas email unique
-    console.log("signup")
     bcrypt.hash(req.body.password, 10) // 10 : number of hashing passes
     .then(hash => {
         const user = new User({

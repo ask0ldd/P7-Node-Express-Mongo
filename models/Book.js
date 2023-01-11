@@ -2,9 +2,11 @@ const mongoose = require('mongoose')
 
 const bookSchema = mongoose.Schema({
     // _id automatiquement genere par mongo
+    //id: { type : Number, required : true},
+    userId: { type : String, required : true},
     title: { type : String, required : true},
     author: { type : String, required : true},
-    imageUrl: { type : String, required : true},
+    imageUrl: { type : String}, //required
     year: { type : Number, required : true},
     genre: { type : String, required : true},
     ratings:    [{
@@ -13,6 +15,10 @@ const bookSchema = mongoose.Schema({
                     grade: {type : Number}
                 }],
     averageRating: { type : Number }
+})
+
+bookSchema.set('toJSON', {
+    virtuals: true
 })
 
 module.exports = mongoose.model('Book', bookSchema)

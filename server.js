@@ -33,7 +33,7 @@ const errorHandler = error => {
     }
   };
 
-const port = normalizePort(process.env.PORT || '3000'); // if port 3000 unav or if the env running the server send us another port to use
+const port = normalizePort(process.env.PORT || '4000'); // if port 4000 unav or if the env running the server send us another port to use
 app.set('port', port);
 
 const server = http.createServer(app); // function that will be called each time the server receive a request, here the express app is passed
