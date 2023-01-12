@@ -31,8 +31,8 @@ const mongoose = require('mongoose');
             "_id" : null, // mandatory
             "avg" : { "$avg" : "$ratings.grade" }})
         .then(result => {
-            console.log(result[0].avg)
-            req.bookAvg = result[0].avg // res -> req // arrondir
+            console.log(result[0].avg) // groupe renvoie un tableau donc [0]?
+            req.bookAvg = result[0].avg.toFixed(1) // res -> req // arrondir
             next()})
         .catch(error => console.log(error))     
     } catch(error) {

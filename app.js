@@ -18,7 +18,7 @@ const app = express()
 
 app.use('/images', express.static(path.join(__dirname, 'images'))) // accepting requests asking to get an image from /images
 
-app.use(express.json()) // permet d'extraire le corps json de la requete
+app.use(express.json()) // extract json from request body
 // app.use(express.urlencoded({extended:true}))// car request post rating body Content-Type: application/x-www-form-urlencoded
 
 //app.post('/api/books', multer().any()) // any = temp
@@ -30,8 +30,6 @@ app.use((req, res, next) => { // header to deal with CORS
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
-
-//app.use(bodyParser.json())
 
 app.use('/api/books', bookRoutes)
 app.use('/api/auth', userRoutes)

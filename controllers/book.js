@@ -1,40 +1,10 @@
 const Book = require('../models/Book')
 
-/*exports.getBooks = (req, res, next) => { 
-    const books = [
-      {
-        _id: 'oeihfzeomoihi',
-        title: 'the name of the wind',
-        author: 'patrick rothfuss',
-        imageUrl: 'https://m.media-amazon.com/images/I/71jJcPTGd3L.jpg',
-        year: '2008',
-        genre: 'fantasy',
-        ratings:    {
-                        userID: 'oeihfzeomoihi',
-                        grade: '4'
-                    },
-        averageRating: '4.5'},
-        {
-            _id: 'oeihfzeomoihi',
-            title: 'the name of the wind',
-            author: 'patrick rothfuss',
-            imageUrl: 'https://m.media-amazon.com/images/I/71jJcPTGd3L.jpg',
-            year: '2008',
-            genre: 'fantasy',
-            ratings:    {
-                            userID: 'oeihfzeomoihi',
-                            grade: '4'
-                        },
-            averageRating: '4.5'}
-    ]
-    res.status(200).json(books)
-}*/
-
 // verifier que le book n'existe pas deja ?
-exports.postBook = (req, res, next) => { 
-    const book = new Book({...JSON.parse(req.body.book), imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}) // replacer user id par celui du token
-    //console.log("book", book)
-    
+exports.postBook = (req, res, next) => {
+    const parsedBook = JSON.parse(req.body.book);
+    delete parsedBook.userId // id could be falsified, so we get it through auth
+    const book = new Book({...parsedBook, userId: req.auth.userId, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
     book.save()
         .then(() => res.status(201).json({ message: 'Book enregistré !'}))
         .catch(error => res.status(400).json({ error }))
@@ -42,8 +12,26 @@ exports.postBook = (req, res, next) => {
 
 exports.getBook = (req, res, next) => { 
     Book.findOne({ _id: req.params.id })
-    .then(book => res.status(200).json(book))
+    .then(book => 
+        {
+            book.averageRating = book.averageRating.toFixed(1) // pour ne renvoyer qu'une decimale
+            res.status(200).json(book)
+        })
     .catch(error => res.status(404).json({ error }))
+}
+
+exports.updateBook = (req, res, next) => { //verifie si bon user?
+    const parsedBook = JSON.parse(req.body.book);
+    delete parsedBook.userId
+    const authId = req.auth.userId
+    /*Book.updateOne(
+        { _id: req.bookId}, // select // res -> req
+        { $set :{ "averageRating" : req.bookAvg }} // $ = first result // res -> req
+        )
+        .then(books => console.log("updated avg rating"))
+        .catch(error => console.log({ error }))*/
+
+        //utiliser save
 }
 
 exports.deleteBook = (req, res, next) => { // verify user?
@@ -65,11 +53,6 @@ exports.getTop = (req, res, next) => {
     .catch(error => res.status(404).json({ error }))
 }
 
-/*
-person.friends.push(friend);
-person.save(done);
-*/
-
 exports.postRating = (req, res, next) => { // verifier que l'utilisateur n'a pas deja poste une note via middleware?
     //const {userId, rating} = req.body // recuperer userid via token?
     console.log(req.body)
@@ -77,7 +60,7 @@ exports.postRating = (req, res, next) => { // verifier que l'utilisateur n'a pas
     console.log(req.params.id)
     Book.updateOne(
         { _id: req.params.id },
-        { $push: {ratings : { userId : userId, grade : rating }} })
+        { $push: {ratings : { userId : req.auth.userId, grade : rating }} }) // id recupere via l'auth par sécurité
         .then(books => {
             res.status(201).json("rating posted.") // renvoyer le book
             req.bookId = req.params.id // value to pass to the next middleware
@@ -94,7 +77,6 @@ exports.updateAvgRating = (req, res, next) => {
         .then(books => console.log("updated avg rating"))
         .catch(error => console.log({ error }))
 }
-
 
 /*exports.postRating = (req, res, next) => {
     console.log("postrating")
