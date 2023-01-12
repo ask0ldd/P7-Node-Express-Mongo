@@ -25,5 +25,4 @@ Sa méthode single()  crée un middleware qui capture les fichiers d'un certain 
 et les enregistre au système de fichiers du serveur à l'aide du storage configuré.
 
 Sa méthode diskStorage()  configure le chemin et le nom de fichier pour les fichiers entrants.
-
 */

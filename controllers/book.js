@@ -53,14 +53,14 @@ exports.updateBook = (req, res, next) => {
 
 
 // DELETE BOOK
-exports.deleteBook = (req, res, next) => { // verify user? same as updatebook
+exports.deleteBook = (req, res, next) => {
     Book.findOne({ _id: req.params.id }) // get book if existing
     .then(book => 
         {
             if(book.userId === req.auth.userId) // checks if connected user = book creator
             {
                 Book.deleteOne({ _id: req.params.id })
-                .then(res.status(200).json("Book deleted."))
+                .then(() => res.status(200).json("Book deleted."))
                 .catch(error => res.status(400).json({ error }))
             }else
             {
@@ -92,10 +92,10 @@ exports.postRating = (req, res, next) => {
     Book.updateOne(
         { _id: req.params.id },
         { $push: {ratings : { userId : req.auth.userId, grade : rating }} }) // using auth id for security purposes
-        .then(books => {
-            res.status(200).json("Rating posted.") // renvoyer le book ?
+        .then(() => {
             req.bookId = req.params.id
-            next()})
+            next()
+        })
         .catch(error => res.status(400).json({ error }))
 }
 
@@ -106,6 +106,10 @@ exports.updateAvgRating = (req, res, next) => {
         { _id: req.bookId},
         { $set :{ "averageRating" : req.bookAvg }} // $ = first result
         )
-        .then(books => console.log("Avg rating updated."))
+        .then(() => {
+            console.log("Avg rating updated.")
+            // sending back book for refresh only after updating avg rating
+            Book.findOne({ _id: req.params.id }).then(book => res.status(200).json(book)).catch(error => res.status(404).json({ error }))
+        })
         .catch(error => console.log({ error }))
 }
