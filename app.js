@@ -1,5 +1,5 @@
 const express = require('express')
-const bodyParser = require('body-parser')
+//const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const mdp = require('./mdp')
 
@@ -16,16 +16,10 @@ mongoose.connect(mdp,
 
 const app = express()
 
-/*app.use((req, response, next)=> {
-    console.log("requete recue") 
-    next()
-}) // console > powershell et non console browser*/
-
-console.log("test")
-
 app.use('/images', express.static(path.join(__dirname, 'images'))) // accepting requests asking to get an image from /images
 
 app.use(express.json()) // permet d'extraire le corps json de la requete
+// app.use(express.urlencoded({extended:true}))// car request post rating body Content-Type: application/x-www-form-urlencoded
 
 //app.post('/api/books', multer().any()) // any = temp
 

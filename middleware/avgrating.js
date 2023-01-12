@@ -25,14 +25,14 @@ const mongoose = require('mongoose');
 
  module.exports = (req, res, next) => {
     try {
-        Book.aggregate([{ $match: { _id: mongoose.Types.ObjectId(res.locals.id) } }])
+        Book.aggregate([{ $match: { _id: mongoose.Types.ObjectId(req.bookId) } }])
         .unwind("$ratings")
         .group({
             "_id" : null, // mandatory
             "avg" : { "$avg" : "$ratings.grade" }})
         .then(result => {
             console.log(result[0].avg)
-            res.locals.avg = result[0].avg
+            req.bookAvg = result[0].avg // res -> req // arrondir
             next()})
         .catch(error => console.log(error))     
     } catch(error) {

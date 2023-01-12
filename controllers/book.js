@@ -30,10 +30,10 @@ const Book = require('../models/Book')
     res.status(200).json(books)
 }*/
 
-// verifier que le book n'existe pas deja
+// verifier que le book n'existe pas deja ?
 exports.postBook = (req, res, next) => { 
     const book = new Book({...JSON.parse(req.body.book), imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}) // replacer user id par celui du token
-    console.log("book", book)
+    //console.log("book", book)
     
     book.save()
         .then(() => res.status(201).json({ message: 'Book enregistré !'}))
@@ -43,6 +43,13 @@ exports.postBook = (req, res, next) => {
 exports.getBook = (req, res, next) => { 
     Book.findOne({ _id: req.params.id })
     .then(book => res.status(200).json(book))
+    .catch(error => res.status(404).json({ error }))
+}
+
+exports.deleteBook = (req, res, next) => { // verify user?
+    console.log(req.params.id)
+    Book.deleteOne({ _id: req.params.id })
+    .then(book => res.status(200).json("deleted"))
     .catch(error => res.status(404).json({ error }))
 }
 
@@ -64,24 +71,25 @@ person.save(done);
 */
 
 exports.postRating = (req, res, next) => { // verifier que l'utilisateur n'a pas deja poste une note via middleware?
-    const {userId, rating}= req.body // recuperer userid via token?
+    //const {userId, rating} = req.body // recuperer userid via token?
     console.log(req.body)
+    const {userId, rating} = req.body
     console.log(req.params.id)
     Book.updateOne(
         { _id: req.params.id },
         { $push: {ratings : { userId : userId, grade : rating }} })
         .then(books => {
-            res.status(201).json("rating posted.")
-            res.locals.id = bookid // value to pass to the next middleware
+            res.status(201).json("rating posted.") // renvoyer le book
+            req.bookId = req.params.id // value to pass to the next middleware
             next()})
         .catch(error => res.status(404).json({ error }))
 }
 
 exports.updateAvgRating = (req, res, next) => {
-    console.log(res.locals.id)
+    //console.log(req.locals.id) // res -> req
     Book.updateOne(
-        { _id: res.locals.id}, // select
-        { $set :{ "averageRating" : res.locals.avg }} // $ = first result
+        { _id: req.bookId}, // select // res -> req
+        { $set :{ "averageRating" : req.bookAvg }} // $ = first result // res -> req
         )
         .then(books => console.log("updated avg rating"))
         .catch(error => console.log({ error }))
