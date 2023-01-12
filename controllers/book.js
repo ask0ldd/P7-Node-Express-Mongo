@@ -1,5 +1,15 @@
 const Book = require('../models/Book')
 
+/*
+
+si passage multer : 
+req.body.file + req.body.book
+autrement
+req.body
+
+*/
+
+
 // verifier que le book n'existe pas deja ?
 exports.postBook = (req, res, next) => {
     const parsedBook = JSON.parse(req.body.book);
@@ -21,9 +31,21 @@ exports.getBook = (req, res, next) => {
 }
 
 exports.updateBook = (req, res, next) => { //verifie si bon user?
-    const parsedBook = JSON.parse(req.body.book);
-    delete parsedBook.userId
-    const authId = req.auth.userId
+    const tempBook = req.file ? {...JSON.parse(req.body.book), imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : {...req.body}
+    delete tempBook.userId // not replaced cause no need to update that field
+
+    Book.findOne({ _id: req.params.id })
+    .then(book => 
+        {
+            if(book.userId === req.auth.userId)
+            {
+                Book.updateOne({ _id: req.params.id}, {...tempBook}).then(res.status(200).json("updated")).catch()
+            }else
+            {
+                res.status(401).json({ message : 'Not authorized'});
+            }
+        })
+    .catch(error => res.status(400).json({ error }))
     /*Book.updateOne(
         { _id: req.bookId}, // select // res -> req
         { $set :{ "averageRating" : req.bookAvg }} // $ = first result // res -> req
