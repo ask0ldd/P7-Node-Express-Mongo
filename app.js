@@ -1,5 +1,4 @@
 const express = require('express')
-//const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const mdp = require('./mdp')
 
@@ -16,10 +15,9 @@ mongoose.connect(mdp,
 
 const app = express()
 
-app.use('/images', express.static(path.join(__dirname, 'images'))) // accepting requests asking to get an image from /images
+app.use('/images', express.static(path.join(__dirname, 'images'))) // accepting requests asking for an image
 
 app.use(express.json()) // extract json from request body
-// app.use(express.urlencoded({extended:true}))// car request post rating body Content-Type: application/x-www-form-urlencoded
 
 //app.post('/api/books', multer().any()) // any = temp
 
