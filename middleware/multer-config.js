@@ -6,6 +6,8 @@ const MIME_TYPES = {
   'image/png': 'png'
 };
 
+// verifier que le nom de fichier ne dépasse pas une certaine longueur
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => { // save the file into the 'images' folder
     callback(null, 'images');
