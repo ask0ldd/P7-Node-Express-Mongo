@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const bookSchema = mongoose.Schema({
-    userId: { type : String, required : [true, 'UserId is missing']}, // , validate: /^[a-z0-9]/ trim:true?!!! max 5 - 40
+    userId: { type : String, required : [true, 'UserId is missing'], validate: [/^[a-z0-9]{5,40}$/, 'Invalid user id']},
     title: { type : String, required : [true, 'Title is missing'], minLength: [2, 'Title is too short'], maxLength: [24, 'Title is too long']},
     author: { type : String, required : [true, 'Author is missing'], minLength: [4, 'Name is too short'], maxLength: [24, 'Name is too long']},
     imageUrl: { type : String, required : true},
@@ -10,12 +10,13 @@ const bookSchema = mongoose.Schema({
     ratings:    [{
                     _id : false,
                     userId: {type : String, required : true},
-                    grade: {type : Number, required : true, min: [1, 'Invalid Number'], max: [5, 'Invalid Number']}
+                    grade: {type : Number, required : true, min: [1, 'Invalid number'], max: [5, 'Invalid number']}
                 }],
     averageRating: { type : Number }
 })
 
-bookSchema.set('toJSON', { // <<<< Virtuals
+// virtuals activation : _id > id duplication
+bookSchema.set('toJSON', {
     virtuals: true
 })
 

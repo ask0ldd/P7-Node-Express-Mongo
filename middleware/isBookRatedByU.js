@@ -9,7 +9,8 @@ module.exports = (req, res, next) => {
         {
             const filteredBooks = book.ratings.filter(rating => rating.userId === userId)
             req.ratedByUser = filteredBooks.length > 0 ? "true" : "false"
-            req.ratedByUser === "false" ? next() : res.status(400).json({ error : "Book already rated by this user." }) // if already rated by current user
+            // if already not rated by user : next(), else : error
+            req.ratedByUser === "false" ? next() : res.status(403).json({ error : "Book already rated by this user." })
         })
     .catch(error => 
         {

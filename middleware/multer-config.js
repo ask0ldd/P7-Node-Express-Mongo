@@ -6,21 +6,24 @@ const MIME_TYPES = {
   'image/png': 'png'
 };
 
-// verifier que le nom de fichier ne dépasse pas une certaine longueur
+// !!! verifier que le nom de fichier ne dépasse pas une certaine longueur
 
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => { // save the file into the 'images' folder
-    callback(null, 'images');
+  destination: (req, file, callback) => { 
+    // save the file into the 'images' folder
+    callback(null, 'images')
   },
   filename: (req, file, callback) => { 
     console.log('file.originalname :',file.originalname)
-    const name = file.originalname.split(' ').join('_').split('.')[0]; // .split('.')[0] added
-    const extension = MIME_TYPES[file.mimetype]; // valid extensions
-    callback(null, name + Date.now() + '.' + extension);
+    // .split('.')[0] added to get rid of the extension before update the filename
+    const name = file.originalname.split(' ').join('_').split('.')[0]
+    const extension = MIME_TYPES[file.mimetype] // valid extensions
+    callback(null, name + Date.now() + '.' + extension)
   }
 });
 
-module.exports = multer({storage: storage}).single('image'); // pass the storage config constant , .single() enregistre
+// pass the storage config , .single() : saving
+module.exports = multer({storage: storage}).single('image')
 
 /*
 Sa méthode single()  crée un middleware qui capture les fichiers d'un certain type (passé en argument), 

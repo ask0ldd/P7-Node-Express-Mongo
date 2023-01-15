@@ -4,7 +4,7 @@ const mdp = require('./mdp')
 
 const bookRoutes = require('./routes/book')
 const userRoutes = require('./routes/user')
-const path = require('path');
+const path = require('path') // ???!!!
 
 // todo : connexion db
 mongoose.connect(mdp,
@@ -19,19 +19,16 @@ app.use('/images', express.static(path.join(__dirname, 'images'))) // accepting 
 
 app.use(express.json({limit: '2mb'})) // extract json from request body // fixe limit
 
-// app.use(express.limit('2mb')); ??,!! ou multer
-
-//app.post('/api/books', multer().any()) // any = temp
-
-app.use((req, res, next) => { // header to deal with CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
+app.use((req, res, next) => { 
+    res.setHeader('Access-Control-Allow-Origin', '*') // deals with CORS
     //res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, X-Auth-Token');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // enleve patch options , PATCH, OPTIONS'
-    next();
-});
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, X-Auth-Token')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE') // out : PATCH, OPTIONS
+    next()
+})
 
 app.use('/api/books', bookRoutes)
 app.use('/api/auth', userRoutes)
 
-module.exports = app // permet d'acceder a l'application depuis nos autres fichiers, notamment server node
+// give access to the app to other files through require
+module.exports = app  

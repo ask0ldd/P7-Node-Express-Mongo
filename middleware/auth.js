@@ -2,10 +2,10 @@ const jwt = require('jsonwebtoken')
  
 module.exports = (req, res, next) => {
    try {
-        const token = req.headers.authorization.split(' ')[1] // couper apres bearer
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET')
-        const userId = decodedToken.userId // decoded token contient?
-        req.auth = { // local
+        const token = req.headers.authorization.split(' ')[1] // extracting the info after bearer in the authorization header
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET') // check if expired
+        const userId = decodedToken.userId
+        req.auth = { // local ?
             userId: userId
         }
 	    next()

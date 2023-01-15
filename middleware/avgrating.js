@@ -9,12 +9,12 @@ module.exports = (req, res, next) => {
             "_id" : null, // mandatory
             "avg" : { "$avg" : "$ratings.grade" }})
         .then(result => {
-            console.log(result[0].avg) // groupe renvoie un tableau donc [0]?
-            req.bookAvg = result[0].avg.toFixed(1) // res -> req // arrondir
+            // group send back an array
+            req.bookAvg = result[0].avg.toFixed(1) // 1 decimal only
             next()})
         .catch(error => console.log(error))     
     } catch(error) {
-        //res.status(401).json({ error })
+        // internal process so no need of res.status(40x)
         console.log(error)
     }
  }

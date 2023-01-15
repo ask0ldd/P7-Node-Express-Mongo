@@ -8,7 +8,7 @@ const auth = require('../middleware/auth')
 
 const booksCtrl = require ('../controllers/book')
 
-// router.use with next called would create a middleware that would execute before all the following middleware
+// router.use would create a middleware that would be executed before all the following middleware
 
 // '/' : added to the uri already specified in app.js : app.use('/api/books', bookRoutes)
 router.get('/', booksCtrl.getAllBooks)
@@ -20,3 +20,5 @@ router.put('/:id', auth, multer, booksCtrl.updateBook)
 router.delete('/:id', auth, booksCtrl.deleteBook)
 
 module.exports = router
+
+// app.post('/api/books', multer().any()) // any = temp
