@@ -27,7 +27,7 @@ app.use((req, res, next) => { // header to deal with CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     //res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, X-Auth-Token');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'); // enleve patch options
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // enleve patch options , PATCH, OPTIONS'
     next();
 });
 
