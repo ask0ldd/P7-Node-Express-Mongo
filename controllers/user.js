@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 
 
 // REGISTER USER
-exports.signup = (req, res, next) => { // !!! Verify password not too short or too long > error
+exports.signup = (req, res, next) => {
+    if (req.body.password.length < 8 || req.body.password.length > 24) return res.status(400).json({error : "Password should have at least 8 characters and no more than 24."})
     bcrypt.hash(req.body.password, 10) // 10 : number of hashing passes
     .then(hash => {
         const user = new User({
@@ -22,13 +23,13 @@ exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
     .then(user => 
         {
-        if (!user) return res.status(401).json({ message: 'Password & login dont match.'})
+        if (!user) return res.status(401).json({ error : 'Password & login dont match.'})
         
         // compare the processed sent password with the hashed one in db
         bcrypt.compare(req.body.password, user.password)
         .then(valid => 
             {
-            if (!valid) { return res.status(401).json({ message: 'Password & login dont match.' });}
+            if (!valid) { return res.status(401).json({ error : 'Password & login dont match.' });}
             
             console.log("correct :", user._id)
 

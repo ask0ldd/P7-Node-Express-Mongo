@@ -51,7 +51,7 @@ exports.updateBook = (req, res, next) => {
                 .catch(error => res.status(400).json({ error }))
             }else
             {
-                res.status(401).json({ message : 'Not authorized.'});
+                res.status(401).json({ error : 'Not authorized.'});
             }
         })
     .catch(error => res.status(404).json({ error }))
