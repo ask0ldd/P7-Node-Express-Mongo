@@ -16,7 +16,7 @@ exports.postBook = (req, res, next) => {
     book.save()
         .then(() => res.status(201).json({ message: 'Book saved.'}))
         .catch(error => {
-            res.status(400).json({ error })
+            res.status(400).json({ message : "This book can't be saved.", error : error })
         })
 }
 
@@ -29,7 +29,7 @@ exports.getBook = (req, res, next) => {
             book.averageRating = book.averageRating.toFixed(1) // limited number of decimals
             res.status(200).json(book)
         })
-    .catch(error => res.status(404).json({ error }))
+    .catch(error => res.status(404).json({ message : "This book can't be found.", error : error }))
 }
 
 
@@ -47,14 +47,14 @@ exports.updateBook = (req, res, next) => {
             if(book.userId === req.auth.userId)
             {
                 Book.updateOne({ _id: req.params.id }, { ...tempBook })
-                .then(res.status(200).json("Book updated."))
-                .catch(error => res.status(400).json({ error }))
+                .then(res.status(200).json({ message : "Book updated."}))
+                .catch(error => res.status(400).json({ message : "This book can't be updated.", error : error }))
             }else
             {
-                res.status(401).json({ error : 'Not authorized.'});
+                res.status(401).json({ message : 'Not authorized.' });
             }
         })
-    .catch(error => res.status(404).json({ error }))
+    .catch(error => res.status(404).json({ message : "This book can't be found.", error : error }))
 }
 
 
@@ -67,14 +67,14 @@ exports.deleteBook = (req, res, next) => {
             if(book.userId === req.auth.userId) 
             {
                 Book.deleteOne({ _id: req.params.id })
-                .then(() => res.status(200).json("Book deleted."))
-                .catch(error => res.status(400).json({ error }))
+                .then(() => res.status(200).json({ message :"Book deleted."}))
+                .catch(error => res.status(400).json({ message : "This book can't be deleted.", error : error }))
             }else
             {
                 res.status(401).json({ message : 'Not authorized.'});
             }
         })
-    .catch(error => res.status(404).json({ error }))
+    .catch(error => res.status(404).json({ message : "This book can't be found.", error : error }))
 }
 
 
@@ -82,7 +82,7 @@ exports.deleteBook = (req, res, next) => {
 exports.getAllBooks = (req, res, next) => { 
     Book.find()
     .then(books => res.status(200).json(books))
-    .catch(error => res.status(404).json({ error }))
+    .catch(error => res.status(404).json({ message : "Can't find any book.", error : error }))
 }
 
 
@@ -90,7 +90,7 @@ exports.getAllBooks = (req, res, next) => {
 exports.getTop = (req, res, next) => {
     Book.find().limit(3).sort({averageRating:-1}) // descending order
     .then(books => res.status(200).json(books))
-    .catch(error => res.status(404).json({ error }))
+    .catch(error => res.status(404).json({ message : "Can't find any book.", error : error }))
 }
 
 
@@ -106,7 +106,7 @@ exports.postRating = (req, res, next) => {
             req.bookId = req.params.id 
             next()
         })
-        .catch(error => res.status(401).json({ error }))
+        .catch(error => res.status(401).json({ message : "This book can't be found.", error : error }))
 }
 
 
@@ -117,9 +117,9 @@ exports.updateAvgRating = (req, res, next) => {
         { $set :{ "averageRating" : req.bookAvg }} // $ = first result
         )
         .then(() => {
-            console.log("Avg rating updated.")
+            // console.log("Avg rating updated.")
             // sending back refreshed book after updating avg rating
-            Book.findOne({ _id: req.params.id }).then(book => res.status(200).json(book)).catch(error => res.status(404).json({ error }))
+            Book.findOne({ _id: req.params.id }).then(book => res.status(200).json(book)).catch(error => res.status(404).json({ message : "This book can't be found.", error : error }))
         })
-        .catch(error => res.status(401).json({ error }))
+        .catch(error => res.status(401).json({ message : "This book can't be found.", error : error }))
 }
