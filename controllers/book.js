@@ -1,9 +1,9 @@
 const Book = require('../models/Book')
 
 /*
-si passage multer : 
+if multer involved : 
 req.body.file + req.body.book
-autrement
+without that :
 req.body
 */
 

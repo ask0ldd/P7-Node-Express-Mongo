@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 // REGISTER USER
 exports.signup = (req, res, next) => {
     // return an error if the password doesn't match 8 <= length <= 24
+    // can't deal with that validation through the model, cause it has to deal with the hash
     if (req.body.password.length < 8 || req.body.password.length > 24) return res.status(400).json({error : "Password should have at least 8 characters and no more than 24."})
     bcrypt.hash(req.body.password, 10) // 10 : number of hashing passes
     .then(hash => {
