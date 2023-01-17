@@ -21,7 +21,6 @@ app.use(express.json({limit: '2mb'})) // extract json from request body // fixe 
 
 app.use((req, res, next) => { 
     res.setHeader('Access-Control-Allow-Origin', '*') // deals with CORS
-    //res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, X-Auth-Token')
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE') // out : PATCH, OPTIONS
     next()
