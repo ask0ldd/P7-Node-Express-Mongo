@@ -51,7 +51,7 @@ exports.updateBook = (req, res, next) => {
                 .catch(error => res.status(400).json({ message : "This book can't be updated.", error : error }))
             }else
             {
-                res.status(401).json({ message : 'Not authorized.' });
+                res.status(403).json({ message : 'Not authorized.' });
             }
         })
     .catch(error => res.status(404).json({ message : "This book can't be found.", error : error }))
@@ -71,7 +71,7 @@ exports.deleteBook = (req, res, next) => {
                 .catch(error => res.status(400).json({ message : "This book can't be deleted.", error : error }))
             }else
             {
-                res.status(401).json({ message : 'Not authorized.'});
+                res.status(403).json({ message : 'Not authorized.'});
             }
         })
     .catch(error => res.status(404).json({ message : "This book can't be found.", error : error }))

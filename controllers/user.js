@@ -41,5 +41,5 @@ exports.login = (req, res, next) => {
                 token: jwt.sign({ userId: user._id }, 'RANDOM_TOKEN_SECRET', { expiresIn: '1h' })
             })
             }).catch(error => res.status(500).json({ message : "Encryption error.", error : error }))
-        }).catch(error => res.status(400).json({ message : "Unknown user.", error : error }))
+        }).catch(error => res.status(404).json({ message : "Unknown user.", error : error }))
 }
