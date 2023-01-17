@@ -11,6 +11,8 @@ module.exports = (req, res, next) => {
         .then(result => {
             // group send back an array
             req.bookAvg = result[0].avg.toFixed(1) // 1 decimal only
+            if (req.bookAvg < 0) req.bookAvg = 0
+            if (req.bookAvg > 5) req.bookAvg = 5
             next()})
         .catch(error => console.log(error))     
     } catch(error) {

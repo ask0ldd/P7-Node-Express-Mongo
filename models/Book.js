@@ -9,10 +9,10 @@ const bookSchema = mongoose.Schema({
     genre: { type : String, trim : true, required : [true, 'Genre is missing'], minLength: [4, 'Genre is too short'], maxLength: [24, 'Genre is too long']},
     ratings:    [{
                     _id : false,
-                    userId: {type : String, required : true},
-                    grade: {type : Number, required : true, min: [1, 'Invalid number'], max: [5, 'Invalid number']}
+                    userId: {type : String, required : [true, 'UserId is missing'], validate: [/^[a-z0-9]{5,40}$/, 'Invalid user id']},
+                    grade: {type : Number, required : true, min: [0, 'Invalid number'], max: [5, 'Invalid number']}
                 }],
-    averageRating: { type : Number }
+    averageRating: { type : Number, min: [0, 'Invalid number'], max: [5, 'Invalid number'] }
 })
 
 // virtuals activation : _id > id duplication
