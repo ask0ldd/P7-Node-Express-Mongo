@@ -32,8 +32,6 @@ exports.login = (req, res, next) => {
         .then(valid => 
             {
             if (!valid) { return res.status(401).json({ message : 'Password & login dont match.' });}
-            
-            console.log("correct :", user._id)
 
             res.status(200).json({
                 userId: user._id,

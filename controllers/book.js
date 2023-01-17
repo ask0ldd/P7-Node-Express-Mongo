@@ -38,7 +38,7 @@ exports.updateBook = (req, res, next) => {
     // populate tempBook in two different ways : with or without file
     const tempBook = req.file ? {...JSON.parse(req.body.book), imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`} : {...req.body}
     // not replaced cause that field needs no update
-    delete tempBook.userId 
+    delete tempBook.userId
 
     Book.findOne({ _id: req.params.id })
     .then(book => 

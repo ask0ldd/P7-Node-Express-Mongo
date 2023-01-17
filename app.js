@@ -4,7 +4,7 @@ const mdp = require('./mdp')
 
 const bookRoutes = require('./routes/book')
 const userRoutes = require('./routes/user')
-const path = require('path') // ???!!!
+const path = require('path')
 
 // todo : connexion db
 mongoose.connect(mdp,
@@ -15,7 +15,7 @@ mongoose.connect(mdp,
 
 const app = express()
 
-app.use('/images', express.static(path.join(__dirname, 'images'))) // accepting requests asking for an image
+app.use('/images', express.static(path.join(__dirname, 'images'))) // serving uploaded images
 
 app.use(express.json({limit: '2mb'})) // extract json from request body // fixe limit
 

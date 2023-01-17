@@ -1,12 +1,6 @@
 const multer = require('multer');
 
-const MIME_TYPES = {
-  'image/jpg': 'jpg',
-  'image/jpeg': 'jpg',
-  'image/png': 'png'
-};
-
-// !!! verifier que le nom de fichier ne dépasse pas une certaine longueur
+const MIME_TYPES = { 'image/jpg': 'jpg', 'image/jpeg': 'jpg', 'image/png': 'png' }
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => { 
@@ -14,9 +8,8 @@ const storage = multer.diskStorage({
     callback(null, 'images')
   },
   filename: (req, file, callback) => { 
-    console.log('file.originalname :',file.originalname)
     // .split('.')[0] added to get rid of the extension before update the filename
-    const name = file.originalname.split(' ').join('_').split('.')[0] // max length filename?!!!
+    const name = file.originalname.split(' ').join('_').split('.')[0] // max length fname?
     const extension = MIME_TYPES[file.mimetype] // valid extensions
     callback(null, name + Date.now() + '.' + extension)
   }
