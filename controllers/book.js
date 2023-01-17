@@ -1,4 +1,5 @@
 const Book = require('../models/Book')
+const fs = require('fs')
 
 /*
 if multer involved : 
@@ -66,6 +67,13 @@ exports.deleteBook = (req, res, next) => {
             // checks if jwt user = book creator
             if(book.userId === req.auth.userId) 
             {
+                const filename = book.imageUrl.split('/images/')[1]
+                fs.unlink('images/' + filename, function(err) {
+                    if(err && err.code) {
+                        console.info(`File : ${filename} can't be removed.`)
+                    }
+                })
+
                 Book.deleteOne({ _id: req.params.id })
                 .then(() => res.status(200).json({ message :"Book deleted."}))
                 .catch(error => res.status(400).json({ message : "This book can't be deleted.", error : error }))
