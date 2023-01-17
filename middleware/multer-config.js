@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   filename: (req, file, callback) => { 
     console.log('file.originalname :',file.originalname)
     // .split('.')[0] added to get rid of the extension before update the filename
-    const name = file.originalname.split(' ').join('_').split('.')[0]
+    const name = file.originalname.split(' ').join('_').split('.')[0] // max length filename?!!!
     const extension = MIME_TYPES[file.mimetype] // valid extensions
     callback(null, name + Date.now() + '.' + extension)
   }
