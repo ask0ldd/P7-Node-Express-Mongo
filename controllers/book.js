@@ -58,9 +58,9 @@ exports.updateBook = (req, res, next) => {
                 const filename = book.imageUrl.split('/images/')[1]
 
                 Book.updateOne({ _id: req.params.id }, { ...tempBook })
-                .then( book => {
+                .then( () => {
                     res.status(200).json({ message : "Book updated."})
-                    fs.unlink('images/' + filename, function(err) {
+                    if (req.file) fs.unlink('images/' + filename, function(err) {
                         if(err && err.code) {
                             console.info(`File : ${filename} can't be removed.`)
                         }
@@ -85,14 +85,16 @@ exports.deleteBook = (req, res, next) => {
             if(book.userId === req.auth.userId) 
             {
                 const filename = book.imageUrl.split('/images/')[1]
-                fs.unlink('images/' + filename, function(err) {
-                    if(err && err.code) {
-                        console.info(`File : ${filename} can't be removed.`)
-                    }
-                })
 
                 Book.deleteOne({ _id: req.params.id })
-                .then(() => res.status(200).json({ message :"Book deleted."}))
+                .then(() => {
+                    res.status(200).json({ message :"Book deleted."})
+                    fs.unlink('images/' + filename, function(err) {
+                        if(err && err.code) {
+                            console.info(`File : ${filename} can't be removed.`)
+                        }
+                    })
+                })
                 .catch(error => res.status(400).json({ message : "This book can't be deleted.", error : error }))
             }else
             {
