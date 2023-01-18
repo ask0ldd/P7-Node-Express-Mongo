@@ -5,7 +5,7 @@ const bookSchema = mongoose.Schema({
     title: { type : String, trim : true, required : [true, 'Title is missing'], validate: [/^[a-zéèêëâàäûüùôçA-Z0-9 ,.'-]{2,24}$/, 'Invalid title']},
     author: { type : String, trim : true, required : [true, 'Author is missing'], validate: [/^[a-zéèêëâàäûüùôçA-Z0-9 ,.'-]{4,24}$/, 'Invalid author']},
     imageUrl: { type : String, required : true},
-    year: { type : Number, trim : true, required : [true, 'Year of publication is missing'], validate: [/^[0-9]{3,4}$/, 'Invalid Year']},
+    year: { type : Number, trim : true, required : [true, 'Year of publication is missing'], validate: [/^[0-9]{3,4}$/, 'Invalid year']},
     genre: { type : String, trim : true, required : [true, 'Genre is missing'], validate: [/^[a-zéèêëâàäûüùôçA-Z0-9 ,.'-]{4,24}$/, 'Invalid genre']},
     ratings:    [{
                     _id : false,
