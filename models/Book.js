@@ -20,4 +20,16 @@ bookSchema.set('toJSON', {
     virtuals: true
 })
 
+bookSchema.pre('updateOne', function(next) {
+    this.options.runValidators = true;
+    next();
+  });
+
+/*mongoose.plugin(schema => {
+    schema.pre('findOneAndUpdate', setRunValidators);
+    schema.pre('updateMany', setRunValidators);
+    schema.pre('updateOne', setRunValidators);
+    schema.pre('update', setRunValidators);
+  });*/
+
 module.exports = mongoose.model('Book', bookSchema)

@@ -60,13 +60,24 @@ exports.updateBook = (req, res, next) => {
                 Book.updateOne({ _id: req.params.id }, { ...tempBook })
                 .then( () => {
                     res.status(200).json({ message : "Book updated."})
-                    if (req.file) fs.unlink('images/' + filename, function(err) {
-                        if(err && err.code) {
-                            console.info(`File : ${filename} can't be removed.`)
-                        }
-                    })
+                    // if the request contains a new image, remove the previous one
+                    if (req.file) { 
+                        fs.unlink('images/' + filename, function(err) {
+                            if(err && err.code) {
+                                console.info(`File : ${filename} can't be removed.`)
+                            }
+                        })}
                 })
-                .catch(error => res.status(400).json({ message : "This book can't be updated.", error : error }))
+                .catch(error => {
+                    res.status(400).json({ message : "This book can't be updated.", error : error })
+                    // if the db update fails, remove the replacement image already saved by multer
+                    if (req.file) {
+                        fs.unlink('images/' + req.file.filename, function(err) {
+                            if(err && err.code) {
+                                console.info(`File : ${req.file.filename} can't be removed.`)
+                            }
+                        })}
+                })
             }else
             {
                 res.status(403).json({ message : 'Not authorized.' });
