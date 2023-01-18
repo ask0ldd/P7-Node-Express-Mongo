@@ -104,7 +104,7 @@ exports.getAllBooks = (req, res, next) => {
 
 // TOP 3 BOOKS
 exports.getTop = (req, res, next) => {
-    Book.find().limit(3).sort({averageRating:-1}) // descending order
+    Book.find().sort({averageRating:-1}).limit(3) // descending order
     .then(books => res.status(200).json(books))
     .catch(error => res.status(404).json({ message : "Can't find any book.", error : error }))
 }
