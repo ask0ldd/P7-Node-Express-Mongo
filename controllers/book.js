@@ -1,5 +1,6 @@
 const Book = require('../models/Book')
 const fs = require('fs')
+const { off } = require('process')
 
 /*
 if multer involved : 
@@ -13,11 +14,18 @@ exports.postBook = (req, res, next) => {
     const parsedBook = JSON.parse(req.body.book)
     // parsedBook.userId could be falsified, so we will get it through auth, jwt more reliable
     delete parsedBook.userId
+    if(parsedBook.ratings[0].grade === 0 || parsedBook.ratings[0].grade == undefined) parsedBook.averageRating = 0
+    console.log(parsedBook)
     const book = new Book({...parsedBook, userId: req.auth.userId, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`})
     book.save()
         .then(() => res.status(201).json({ message: 'Book saved.'}))
         .catch(error => {
             res.status(400).json({ message : "This book can't be saved.", error : error })
+            fs.unlink('images/' + req.file.filename, function(err) {
+                if(err && err.code) {
+                    console.info(`File : ${req.file.filename} can't be removed.`)
+                }
+            })
         })
 }
 
