@@ -55,8 +55,17 @@ exports.updateBook = (req, res, next) => {
             // checks if jwt user = book creator
             if(book.userId === req.auth.userId)
             {
+                const filename = book.imageUrl.split('/images/')[1]
+
                 Book.updateOne({ _id: req.params.id }, { ...tempBook })
-                .then(res.status(200).json({ message : "Book updated."}))
+                .then( book => {
+                    res.status(200).json({ message : "Book updated."})
+                    fs.unlink('images/' + filename, function(err) {
+                        if(err && err.code) {
+                            console.info(`File : ${filename} can't be removed.`)
+                        }
+                    })
+                })
                 .catch(error => res.status(400).json({ message : "This book can't be updated.", error : error }))
             }else
             {
